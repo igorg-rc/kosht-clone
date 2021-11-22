@@ -1,0 +1,23 @@
+{
+  "header": {
+    "brandPhrase": "We talk about personal finances",
+    "brandBtn": "Kosht",
+    "searchBtn": "Find",
+    "searchPlaceholder": "Search"
+  },
+  "leftMenu": {
+    "followUs": "Follow us",
+    "subscribeHeader": "Enter email",
+    "subscribeLink": "Subscribe",
+    "about": "About project"
+  },
+  "separateList": {
+    "accorionExpand": "expand",
+    "accorionCollapse": "collapse",
+    "accorionShowMore": "Show more",
+    "readMore": "Read more"
+  },
+  "loading": {
+    "loadingStatus": "Loading..."
+  }
+}

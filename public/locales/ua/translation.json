@@ -1,0 +1,23 @@
+{
+  "header": {
+    "brandPhrase": "Розповідаємо про особисті фінанси",
+    "brandBtn": "Кошт",
+    "searchBtn": "Знайти",
+    "searchPlaceholder": "Пошук"
+  },
+  "leftMenu": {
+    "followUs": "Слідкуйте за нами",
+    "subscribeHeader": "Введіть email",
+    "subscribeLink": "Підписатися",
+    "about": "Про проект"
+  },
+  "separateList": {
+    "accorionExpand": "розгорнути",
+    "accorionCollapse": "згорнути",
+    "accorionShowMore": "Показати ще",
+    "readMore": "Читайте ще"
+  },
+  "loading": {
+    "loadingStatus": "Завантаження..."
+  }
+}
