@@ -6,7 +6,8 @@ import { List, ListItem, Typography, TextField, useMediaQuery, InputAdornment } 
 import { create_subscriber, get_categories, get_contacts, get_tags, HOST_URL } from "../../api/api"
 import { SectionTitle } from "./Title"
 import { Trans, useTranslation } from "react-i18next"
-// import { changeLanguage } from "i18next"
+import { SpinnerContent } from "./SpinnerContent"
+import { lang } from "moment"
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -149,9 +150,11 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const LeftMenu = () => {
-  const {i18n} = useTranslation()
+  const { i18n, t } = useTranslation()
   const theme = useTheme()
-  const isSM = useMediaQuery(theme.breakpoints.down('xs'))
+  // const isSM = useMediaQuery(theme.breakpoints.down('xs'))
+  // const initialLanguage = localStorage.getItem('locale') || "ua"
+  // const [language, setLanguage] = useState(initialLanguage)
   const DEV_API_LINK = HOST_URL
   const styles = useStyles()
   const [categories, setCategories] = useState([])
@@ -161,6 +164,8 @@ export const LeftMenu = () => {
   const [userInput, setUserInput] = useState("")
   const [categoryHover, setCategoryHover] = useState(false)
   const [categoryIndex, setCategoryIndex] = useState(null)
+  const localeUA = localStorage.getItem('locale') === 'ua'
+  const localeEN = localStorage.getItem('locale') === 'en'
 
   useEffect(() => {
     const setContent = async () => {
@@ -172,7 +177,7 @@ export const LeftMenu = () => {
       setLoading(false)
     }
     setContent()
-  }, [])
+  }, [t])
 
   const subscribeHandler = async e => {
     try {
@@ -196,8 +201,12 @@ export const LeftMenu = () => {
     setCategoryHover(false)
   }
 
-  const handleLanguageChange = lang => i18n.changeLanguage(lang)
-   
+  const handleLanguageChange = lang => {
+    window.location.reload()
+    i18n.changeLanguage(lang)
+    localStorage.setItem('locale', lang)
+  }
+
   return loading ? null : <>
     <section className={styles.main}>
       <div className={styles.list}>
@@ -230,7 +239,9 @@ export const LeftMenu = () => {
                 /> 
                 :
                 <span className={styles.liCircle}>&#9679;</span> }
-                <span className={styles.liLattice}>{item.title_ua}</span>
+                <span className={styles.liLattice}>
+                  {localeUA ? item.title_ua : (localeEN ? item.title_en : item.title_ua )}
+                </span>
               </NavLink>
             </ListItem>
           )) }
@@ -247,7 +258,8 @@ export const LeftMenu = () => {
                 className={styles.otherLink}
               >
                 <Typography className={styles.linkText}>
-                  <span className={styles.liLattice}>#</span>{item.title_ua}
+                  <span className={styles.liLattice}>#</span>
+                  {localeUA ? item.title_ua : (localeEN ? item.title_en : item.title_ua )}
                 </Typography>
               </NavLink>
             </ListItem>
@@ -262,20 +274,18 @@ export const LeftMenu = () => {
         <List className={styles.tagList}>
           { contacts.map(item => (
             <ListItem className={styles.tagListItem} key={item._id}>
-              <a 
-                href={`${item.link}`}
-                target="_blank"
-                className={styles.otherLink}
-              >
+              <a href={`${item.link}`} target="_blank" className={styles.otherLink}>
                 <Typography className={styles.linkText}>
-                { item.imgUrl ? 
-                <img 
-                  src={`${DEV_API_LINK}/${item.imgUrl}`} 
-                  alt={item.title} 
-                  className={styles.listItemIcon} 
-                /> :
-                <span className={styles.liCircle}>&#9679;</span> }
-                <span className={styles.liLattice}>{item.title_ua}</span>
+                  { item.imgUrl ? 
+                  <img 
+                    src={`${DEV_API_LINK}/${item.imgUrl}`} 
+                    alt={item.title} 
+                    className={styles.listItemIcon} 
+                  /> :
+                  <span className={styles.liCircle}>&#9679;</span> }
+                  <span className={styles.liLattice}>
+                    {localeUA ? item.title_ua : (localeEN ? item.title_en : item.title_ua )}
+                  </span>
                 </Typography>
               </a>
             </ListItem>
@@ -287,7 +297,7 @@ export const LeftMenu = () => {
         <div className={styles.subscribeForm}>
           <TextField  
             variant="outlined" 
-            placeholder="Ваш email" 
+            placeholder={t("leftMenu.subscribePlaceholder")} 
             fullWidth
             inputProps={{ className: styles.inputField }}
             onChange={e => setUserInput(e.target.value)}
@@ -304,7 +314,7 @@ export const LeftMenu = () => {
       </div>
     </section>
     <section className={styles.main} style={{ margin: '30px 0', padding: '20px 20px' }}>
-      <SectionTitle title={<Trans i18nKey="leftMenu.about">About project</Trans>} />
+      <SectionTitle title={t("leftMenu.about")} />
       {/* <div className={styles.langSwitcher} style={{ color: 'black' }}>
         <TextField  
           variant="outlined" 
@@ -331,6 +341,13 @@ export const LeftMenu = () => {
         <button onClick={() => handleLanguageChange("ua")}>UA</button>
         <button onClick={() => handleLanguageChange("en")}>EN</button>
       </div>
+
+      {/* <select onChange={handleLanguageChange} value={language}>
+        <option value="ua">UA</option>
+        <option value="en">EN</option>
+      </select> */}
+
+      
     </section>
   </>
 }

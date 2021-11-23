@@ -7,7 +7,7 @@ import { PostGeneralView } from "../componenents/Post/PostGeneralView"
 import { makeStyles } from "@material-ui/styles"
 import { PostSeparateListIndex } from "../componenents/PostList/PostSeparateListIndex"
 import { SpinnerContent } from "../componenents/UI/SpinnerContent"
-import { Trans, useTranslation } from "react-i18next"
+import { useTranslation } from "react-i18next"
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -28,29 +28,30 @@ const useStyles = makeStyles(theme => ({
 
 
 export const PostDetail = () => {
+  const { t } = useTranslation()
+  const match = useRouteMatch()
+  const styles = useStyles()
   const [post, setPost] = useState({})
   const [posts, setPosts] = useState([])
   const [morePosts, setMorePosts] = useState([])
-  // const [postsLabel, setPostsLabel] = useState("")
+  const [postsLabel, setPostsLabel] = useState("")
   const [loading, setLoading] = useState(false)
   const [showMore, setShowMore] = useState(true)
   const [expanded, setExpanded] = useState(true)
-  const { i18n, t } = useTranslation()
-  const match = useRouteMatch()
-  const styles = useStyles()
 
   useEffect(() => {
     const setPageContent = async () => {
       setLoading(true)
       const posts = await get_readmore_posts(match.params.slug)
       setPost(await get_post_by_slug(match.params.slug))
-      setPosts(posts.slice(0, 4))
-      setMorePosts(posts)
-      // setPostsLabel(<Trans i18nKey="separateList.readMore">Read more</Trans>)
+      setPosts(posts.slice(0, 5))
+      setMorePosts(posts.slice(0, 10))
+      const readMoreLabel = t("separateList.titleReadMore")
+      setPostsLabel(readMoreLabel)
       setLoading(false)
     }
     setPageContent()
-  }, [])
+  }, [match.params.slug, t])
 
   console.log(post)
   console.log(match.path)
@@ -74,7 +75,7 @@ export const PostDetail = () => {
     />
     <PostSeparateListIndex 
       items={posts} 
-      label={<Trans i18nKey="separateList.readMore">Read more</Trans>} 
+      label={postsLabel} 
       items={showMore ? posts : morePosts} 
       showMore={showMore}
       expanded={expanded}

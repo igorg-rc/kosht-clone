@@ -198,7 +198,7 @@ export const Header = () => {
   const isXS = useMediaQuery(theme.breakpoints.down('xs'))
   const isMd = useMediaQuery(theme.breakpoints.down('md'))
   const searchInputRef = useRef()
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   const onSearchChange = query => setQuery(query)
   const handleMenuOpen    = () => setOpenMenu(true)
@@ -240,7 +240,7 @@ export const Header = () => {
                   <div className={styles.search}>
                     <TextField 
                       variant="outlined"
-                      placeholder={<Trans i18nKey="header.searchPlaceholder">Find</Trans>} 
+                      placeholder={t("header.searchPlaceholder")} 
                       inputProps={{ 
                         style: { 
                           margin: '0 2px', 
@@ -277,7 +277,7 @@ export const Header = () => {
                               color="primary" 
                               className={styles.searchBtn}
                               onClick={handleSearch}
-                              ><Trans i18nKey="header.searchBtn">Search</Trans>
+                              >{t("header.searchBtn")}
                             </Button>
                           </InputAdornment>
                         ),
@@ -301,7 +301,7 @@ export const Header = () => {
           <div>
           <Toolbar className={[styles.toolbar, styles.toolbarMobileTop].concat(",")}>
             <Button variant="contained" color="primary" onClick={() => history.push("/")} className={styles.brandLink}>
-              Кошт
+              {t("header.brandBtn")}
             </Button>
             <MenuIcon className={styles.mobileBtn} onClick={handleMenuOpen} />
           </Toolbar>
@@ -312,7 +312,7 @@ export const Header = () => {
               <Grid item xs={12}>
                 <TextField  
                   variant="outlined" 
-                  placeholder="Пошук" 
+                  placeholder={t("header.searchPlaceholder")} 
                   fullWidth
                   inputProps={{ style: { margin: 0, fontSize: '12px', padding: '10px 0' } }}
                   onChange={e => onSearchChange(e.target.value)}
@@ -332,8 +332,7 @@ export const Header = () => {
                           color="primary" 
                           className={styles.searchBtn}
                           onClick={handleSearch}
-                        >
-                          Знайти
+                        >{t("header.searchBtn")}
                         </Button>
                       </InputAdornment>
                     ),

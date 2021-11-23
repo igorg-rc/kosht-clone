@@ -5,6 +5,7 @@ import { currenciesGeneralList } from "../../files/data/mocData"
 import { get_list_by_slug, get_posts } from "../../api/api"
 import { PostSeparateListIndex } from "../PostList/PostSeparateListIndex"
 import { useRouteMatch } from "react-router"
+import { useTranslation } from "react-i18next"
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -154,35 +155,35 @@ export const RightMenu = ({ path }) => {
   const [loading, setLoading] = useState(false)
   const [tab, setTab] = useState(0)
   const match = useRouteMatch()
-  // const [path, setPath] = useState({})
+  const {t} = useTranslation()
+  const localeUA = localStorage.getItem('locale') === 'ua'
+  const localeEN = localStorage.getItem('locale') === 'en'
 
   const handleChange = (event, newValue) => setTab(newValue)
   
   useEffect(() => {
     const setContent = async () => {
-      // setPath(match.path)
       setLoading(true)
       setCurrencies(currenciesGeneralList.banks)
-      setCurrenciesTitle(currenciesGeneralList)
+      setCurrenciesTitle(t("separateList.titleCurrenciesToday"))
       const newsList = await get_posts()
       setNews(newsList.slice(0,10))
-      setNewsTitle("Новини")
+      setNewsTitle(t("separateList.titleNews"))
       const fetchedList = await get_list_by_slug('editor-choice')
       setArticles(fetchedList.posts)
-      setSectionTitle(fetchedList.title_ua)
-      setCurrenciesTitle(currenciesGeneralList)
+      setSectionTitle(t("separateList.titleEditorChoice"))
       setLoading(false)
     }
     setContent()
-  }, [])
+  }, [t])
 
   console.log(match.path)
 
   const currenciesList = <div id="euro-tab-table_general">
     <>
       <StyledTabs value={tab} onChange={handleChange} aria-label="basic tabs example">
-        <StyledTab label="Євро" />
-        <StyledTab label="Долар" />
+        <StyledTab label={t("separateList.currencyEuro")} />
+        <StyledTab label={t("separateList.currencyUSD")} />
       </StyledTabs>
     </>
     <TabPanel tab={tab} index={0} className={styles.tabPanel}>
@@ -190,13 +191,19 @@ export const RightMenu = ({ path }) => {
         <TableHead>
           <TableRow className={styles.tableHeadRow}>
             <TableCell className={styles.tableHeadCell}>
-              <Typography className={[styles.tableRowText, styles.tableBoldText].concat(" ")}>Банк</Typography>
+              <Typography className={[styles.tableRowText, styles.tableBoldText].concat(" ")}>
+                {t("separateList.currencyBank")}
+              </Typography>
             </TableCell>
             <TableCell className={styles.tableHeadCell}>
-              <Typography className={[styles.tableRowText, styles.tableBoldText, styles.tableHeadCellRight].concat(" ")}>Купівля</Typography>
+              <Typography className={[styles.tableRowText, styles.tableBoldText, styles.tableHeadCellRight].concat(" ")}>
+              {t("separateList.currencyBuy")}
+              </Typography>
             </TableCell>
             <TableCell className={styles.tableHeadCell}>
-              <Typography className={[styles.tableRowText, styles.tableBoldText, styles.tableHeadCellRight].concat(" ")}>Продаж</Typography>
+              <Typography className={[styles.tableRowText, styles.tableBoldText, styles.tableHeadCellRight].concat(" ")}>
+              {t("separateList.currencySelling")}
+              </Typography>
             </TableCell>
           </TableRow>
         </TableHead>
@@ -205,7 +212,9 @@ export const RightMenu = ({ path }) => {
           {currencies.map((item, index) => (
           <TableRow key={index}>
             <TableCell className={styles.tableBodyCell}>
-              <Typography className={[styles.tableRowText, styles.tableRegularText].concat(" ")}>{item.bank_title_ua}</Typography>
+              <Typography className={[styles.tableRowText, styles.tableRegularText].concat(" ")}>
+                {localeUA ? item.bank_title_ua : (localeEN ? item.bank_title_en : item.bank_title_ua )}
+              </Typography>
             </TableCell>
             <TableCell className={[styles.tableBodyCell, styles.tableHeadCellRight].concat(" ")}>
               <Typography className={[styles.tableRowText, styles.tableBoldText].concat(" ")}>{(item.usd_byeRate).toFixed(2)}</Typography>
@@ -224,13 +233,19 @@ export const RightMenu = ({ path }) => {
         <TableHead>
           <TableRow>
             <TableCell className={styles.tableHeadCell}>
-              <Typography className={[styles.tableRowText, styles.tableBoldText].concat(" ")}>Банк</Typography>
+              <Typography className={[styles.tableRowText, styles.tableBoldText].concat(" ")}>
+              {t("separateList.currencyBank")}
+              </Typography>
             </TableCell>
             <TableCell className={styles.tableHeadCell}>
-              <Typography className={[styles.tableRowText, styles.tableBoldText, styles.tableHeadCellRight].concat(" ")}>Купівля</Typography>
+              <Typography className={[styles.tableRowText, styles.tableBoldText, styles.tableHeadCellRight].concat(" ")}>
+              {t("separateList.currencyBuy")}
+              </Typography>
             </TableCell>
             <TableCell className={styles.tableHeadCell}>
-              <Typography className={[styles.tableRowText, styles.tableBoldText, styles.tableHeadCellRight].concat(" ")}>Продаж</Typography>
+              <Typography className={[styles.tableRowText, styles.tableBoldText, styles.tableHeadCellRight].concat(" ")}>
+              {t("separateList.currencySelling")}
+              </Typography>
             </TableCell>
           </TableRow>
         </TableHead>
@@ -239,7 +254,9 @@ export const RightMenu = ({ path }) => {
           {currencies.map((item, index) => (
           <TableRow key={index}>
             <TableCell className={styles.tableBodyCell}>
-              <Typography className={[styles.tableRowText, styles.tableRegularText].concat(" ")}>{item.bank_title_ua}</Typography>
+              <Typography className={[styles.tableRowText, styles.tableRegularText].concat(" ")}>
+              {localeUA ? item.bank_title_ua : (localeEN ? item.bank_title_en : item.bank_title_ua)}
+              </Typography>
             </TableCell>
             <TableCell className={styles.tableBodyCell}>
               <Typography className={[styles.tableRowText, styles.tableBoldText, styles.tableHeadCellRight].concat(" ")}>{(item.euro_byeRate).toFixed(2)}</Typography>
@@ -256,7 +273,7 @@ export const RightMenu = ({ path }) => {
 
   return loading ? null : <> 
     <PostSeparateListIndex 
-      label={currenciesTitle.title_ua} 
+      label={currenciesTitle} 
       items={currencies} 
       currenciesList={currenciesList}
     />

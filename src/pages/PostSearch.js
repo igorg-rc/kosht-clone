@@ -5,6 +5,7 @@ import { PostGeneralView } from "../componenents/Post/PostGeneralView"
 import { PageMessage } from "../componenents/UI/PageMessage"
 import { makeStyles } from "@material-ui/styles"
 import { SpinnerContent } from "../componenents/UI/SpinnerContent"
+import {useTranslation} from "react-i18next"
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const PostSearch = () => {
+  const { t } = useTranslation()
   const styles = useStyles()
   const match = useRouteMatch()
   const [loading, setLoading] = useState(false)
@@ -56,7 +58,7 @@ export const PostSearch = () => {
   console.log(posts)
 
   return loading ? <SpinnerContent loadingStatus={loading} /> : <>
-    <PageMessage message={`Пошук по: "${match.params.query}"`} />
+    <PageMessage message={`${t("search.searchQuery")} "${match.params.query}"`} />
     { posts.length > 0 ?
     <>
       { posts.map(post => (
@@ -84,6 +86,6 @@ export const PostSearch = () => {
       ))}
     </> 
     : 
-    <PageMessage  message={`Пошук не дав результатів`} /> }
+    <PageMessage  message={t("search.searchMessage")} /> }
   </>
 }

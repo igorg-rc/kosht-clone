@@ -8,7 +8,7 @@ import { PostSeparateListIndex } from "../componenents/PostList/PostSeparateList
 // import InfiniteScroll from 'react-infinite-scroll-component'
 // import { InfiniteScroll } from "../componenents/UI/InfiniteScroll"
 // import axios from "axios"
-import { useTranslation, Trans } from'react-i18next'
+import { useTranslation } from'react-i18next'
 import { get_list_by_slug, get_posts } from "../api/api"
 
 const useStyles = makeStyles(theme => ({
@@ -32,31 +32,32 @@ const useStyles = makeStyles(theme => ({
 
 export const PostList = () => {
   const styles = useStyles()
-  const { i18n } = useTranslation()
+  const { t } = useTranslation()
   const [posts, setPosts] = useState([])
   const [showMore, setShowMore] = useState(true)
   const [expanded, setExpanded] = useState(true)
   const [mainNewsLabel, setMainNewsLabel] = useState("")
   const [mainNews, setMainNews] = useState([])
   const [mainNewsMore, setMainNewsMore] = useState([])
-  const [skip, setSkip] = useState(1)
   const [loading, setLoading] = useState(false)
-  const [fetching, setFetching] = useState(true)
-  const [pageNumber, setPageNumber] = useState(1)
+  // const [skip, setSkip] = useState(1)
+  // const [fetching, setFetching] = useState(true)
+  // const [pageNumber, setPageNumber] = useState(1)
 
   useEffect(() => {
     const setContent = async () => {
       setLoading(true)
       const fetchedPosts = await get_posts()
       const newsWeek = await get_list_by_slug("main-news")
-      setMainNewsLabel(newsWeek.title_ua)
+      const newsWeekTitle = t("separateList.titleNewsWeek")
+      setMainNewsLabel(newsWeekTitle)
       setMainNews(newsWeek.posts.slice(0, 4))
-      setMainNewsMore(newsWeek.posts)
+      setMainNewsMore(newsWeek.posts.slice(0, 10))
       setPosts(fetchedPosts)
       setLoading(false)
     }
     setContent()
-  }, [])
+  }, [t])
 
   console.log(posts)
 
@@ -132,13 +133,16 @@ export const PostList = () => {
             id={post._id}
             description={post.description}
             categories={post.categories && post.categories.map(i => (
-              <Link key={i._id} to={(`/category/${(i.slug)}`).toLowerCase()} className={styles.categoryLink}>
-                <span className={styles.linkText}>{i.title_ua}</span>
+              <Link 
+                key={i._id} 
+                to={(`/category/${(i.slug)}`).toLowerCase()} 
+                className={styles.categoryLink}
+              ><span className={styles.linkText}>{i.title_ua}</span>
               </Link>
             ))}
           />
         </div> )) } 
-        { (posts.length == 0) && <PageMessage message={`Ще не створено постів!`} />  }
+        { (posts.length == 0) && <PageMessage message={t("postList.noPosts")} />  }
         </>
       : <><SpinnerContent loadingStatus={loading} items={posts} /></> }
     {/* </InfiniteScroll> */}

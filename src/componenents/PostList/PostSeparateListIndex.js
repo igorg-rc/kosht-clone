@@ -107,9 +107,10 @@ const useStyles = makeStyles(theme => ({
 
 
 export const PostSeparateListIndex = props => {
-  const { items, label, path, toggleShowMore, expanded, toggleExpanded, showMore, currenciesList } = props
+  const { items, label, toggleShowMore, expanded, toggleExpanded, showMore, currenciesList } = props
   const styles = useStyles()
   const theme = useTheme()
+  const {t} = useTranslation()
   const history = useHistory()
   const isSM = useMediaQuery(theme.breakpoints.down('sm'))
   const match = useRouteMatch()
@@ -117,7 +118,7 @@ export const PostSeparateListIndex = props => {
   const labelMainNews = label === "Головне" || label === "Main news"
   const labelNewsList = label === "Новини" || label === "News"
   const labelReadMore = label === "Читайте також" || label === "Read more"
-  const labelCurrenciesRate = label === "Курс валют на сьогодні" || label === "Exchange rate"
+  const labelCurrenciesRate = label === "Курс валют на сьогодні" || label === "Exchange rate for today"
 
   const rows = <div className={styles.content}>
     { items.map(item => (
@@ -205,11 +206,7 @@ export const PostSeparateListIndex = props => {
             <span className={styles.label}>{label}</span> 
           </div>
             <span className={styles.expandText}>
-              { !expanded 
-              ? 
-              <Trans i18nKey="separateList.accordionExpand">expand</Trans>
-              : 
-              <Trans i18nKey="separateList.accordionExpand">collapse</Trans> }
+              { expanded ? <>{t("separateList.accordionCollapse")}</> : <>{t("separateList.accordionExpand")}</> }
             </span>
         </div>
       </AccordionSummary>
@@ -230,18 +227,18 @@ export const PostSeparateListIndex = props => {
         className={styles.expandDiv}
         style={{ display: (labelOfEditorChoice || labelCurrenciesRate || labelNewsList) && 'none', textTransform: 'none' }}
       >
-        <span className={styles.label}>{ showMore ? <><Trans>Показати ще</Trans></> : <>згорнути</> }</span>
-        <IconButton className={styles.icon}>
-          { showMore ? <ExpandMore /> : <ExpandLess /> }
-        </IconButton>
+        <span className={styles.label}>{ showMore 
+        ? <>{t("separateList.accordionShowMore")}</> 
+        : <>{(t("separateList.accordionCollapse")).toLowerCase()}</> }
+        </span>
+        <IconButton className={styles.icon}>{ showMore ? <ExpandMore /> : <ExpandLess /> }</IconButton>
       </div>
       <div style={{ paddingBottom: 20, marginLeft: 15, textAlign: 'left' }}>
         <div 
           className={styles.linkHolder} 
           style={{ display: !labelCurrenciesRate ? 'none' : 'inline-block'}}
           onClick={() => history.push('/currencies/25.07.21')}
-        >
-          <span>Всі банки і валюти</span>
+        ><span>{t("separateList.allCurrenciesLink")}</span>
         </div>
       </div>
     </Accordion>

@@ -1,12 +1,14 @@
 import { useEffect, useState, useMemo } from "react"
 import { makeStyles } from "@material-ui/styles"
 import { Typography, Table, TableHead, TableBody, TableRow, TableCell, TextField, TableContainer, InputAdornment } from "@material-ui/core"
-import { exchangeListUA, dataRowsUSD, dataRowsEuro, dataRowsRub, dataRowsPound, dataRowsFrSw, dataRowsZlot, dataRowsCrona } from "../../files/data/mocData"
+import { exchangeListUA, dataRowsUSD, dataRowsEuro, dataRowsRub, dataRowsPound, dataRowsFrSw, dataRowsZlot, dataRowsCrona, exchangeListEn } from "../../files/data/mocData"
 import { Tabs, Tab, Panel } from '@bumaga/tabs' 
 import searchIcon from '../../files/images/UI/search.png'
 import { SpinnerContent } from "../UI/SpinnerContent"
 // import styled from 'styled-components'
 import "react-tabs/style/react-tabs.css"
+import { useTranslation } from "react-i18next"
+import { t } from "i18next"
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -161,11 +163,13 @@ const useStyles = makeStyles(theme => ({
     border: 'none'
   },
   sortSpan: {
-    color: '#B8B8B8',
-    fontSize: 12,
+    // color: '#B8B8B8',
+    // fontSize: 12,
     '&:hover': {
       cursor: 'pointer'
-    }
+    },
+    color: '#B8B8B8', 
+    fontSize: 10
   }
 }))
 
@@ -220,12 +224,17 @@ const ProductTable = (props) => {
   const styles = useStyles()
   const { items, requestSort, sortConfig } = useSortableData(props.currencies);
   const { query, onInputChange } = props
+  const { t } = useTranslation()
+  const localeUA = localStorage.getItem('locale') === 'ua'
+  // const localeEN = localStorage.getItem('locale') === 'en'
   const getClassNamesFor = (name) => {
     if (!sortConfig) {
       return;
     }
     return sortConfig.key === name ? sortConfig.direction : undefined;
   };
+
+
   return (
   <TableContainer>
     <Table>
@@ -237,7 +246,7 @@ const ProductTable = (props) => {
                 value={query} 
                 onChange={onInputChange}
                 variant="outlined"
-                placeholder="Пошук за назвою банка" 
+                placeholder={t("currenciesPage.searchInput")} 
                 className={styles.searchinput}
                 inputProps={{ 
                   style: { 
@@ -270,27 +279,39 @@ const ProductTable = (props) => {
             </div>
           </TableCell>
           <TableCell component="th" className={styles.tableHeadCell}>
-            <Typography className={[styles.tableBoldText, styles.tableHeadCellRight].concat(" ")}>У касах банків</Typography>
+            <Typography className={[styles.tableBoldText, styles.tableHeadCellRight].concat(" ")}>{t("currenciesPage.atPayDesk")}</Typography>
             <div style={{ textAlign: 'right', marginLeft: 'auto' }}>
-              <span style={{ color: '#B8B8B8', fontSize: 10 }} onClick={() => requestSort('paydesk_bye')} className={[getClassNamesFor('paydesk_bye'), styles.sortSpan].join(" ")}>Купівля&nbsp;&#8597;</span>
+              <span onClick={() => requestSort('paydesk_bye')} className={[getClassNamesFor('paydesk_bye'), styles.sortSpan].join(" ")}>
+                {t("currenciesPage.currencyBuy")}&nbsp;&#8597;
+              </span>
               <span className={styles.sortSpan}>&nbsp;/&nbsp;</span>
-              <span style={{ color: '#B8B8B8', fontSize: 10 }} onClick={() => requestSort('paydesk_sell')} className={[getClassNamesFor('paydesk_sell'), styles.sortSpan].join(" ")}>Продаж&nbsp;&#8597;</span>
+              <span onClick={() => requestSort('paydesk_sell')} className={[getClassNamesFor('paydesk_sell'), styles.sortSpan].join(" ")}>
+                {t("currenciesPage.currencySelling")}&nbsp;&#8597;
+              </span>
             </div>
           </TableCell>
           <TableCell component="th" className={styles.tableHeadCell}>
-            <Typography className={[styles.tableBoldText, styles.tableHeadCellRight].concat(" ")}>При оплаті карткою</Typography>
+            <Typography className={[styles.tableBoldText, styles.tableHeadCellRight].concat(" ")}>{t("currenciesPage.atCard")}</Typography>
             <div style={{ textAlign: 'right', marginLeft: 'auto' }}>
-              <span style={{ color: '#B8B8B8', fontSize: 10 }} onClick={() => requestSort('card_bye')} className={[getClassNamesFor('card_bye'), styles.sortSpan].join(" ")}>Купівля&nbsp;&#8597;</span>
+              <span onClick={() => requestSort('card_bye')} className={[getClassNamesFor('card_bye'), styles.sortSpan].join(" ")}>
+                {t("currenciesPage.currencyBuy")}&nbsp;&#8597;
+              </span>
               <span className={styles.sortSpan}>&nbsp;/&nbsp;</span>
-              <span style={{ color: '#B8B8B8', fontSize: 10 }} onClick={() => requestSort('card_sell')} className={[getClassNamesFor('card_sell'), styles.sortSpan].join(" ")}>Продаж&nbsp;&#8597;</span>
+              <span onClick={() => requestSort('card_sell')} className={[getClassNamesFor('card_sell'), styles.sortSpan].join(" ")}>
+                {t("currenciesPage.currencySelling")}&nbsp;&#8597;
+              </span>
             </div>
           </TableCell>
           <TableCell component="th" className={styles.tableHeadCell}>
-            <Typography className={[styles.tableBoldText, styles.tableHeadCellRight].concat(" ")}>При оплаті онлайн</Typography>
+            <Typography className={[styles.tableBoldText, styles.tableHeadCellRight].concat(" ")}>{t("currenciesPage.atOnline")}</Typography>
             <div style={{ textAlign: 'right', marginLeft: 'auto' }}>
-              <span style={{ color: '#B8B8B8', fontSize: 10 }} onClick={() => requestSort('online_bye')} className={[getClassNamesFor('online_bye'), styles.sortSpan].join(" ")}>Купівля&nbsp;&#8597;</span>
+              <span onClick={() => requestSort('online_bye')} className={[getClassNamesFor('online_bye'), styles.sortSpan].join(" ")}>
+                {t("currenciesPage.currencyBuy")}&nbsp;&#8597;
+              </span>
               <span className={styles.sortSpan}>&nbsp;/&nbsp;</span>
-              <span style={{ color: '#B8B8B8', fontSize: 10 }} onClick={() => requestSort('online_sell')} className={[getClassNamesFor('online_sell'), styles.sortSpan].join(" ")}>Продаж&nbsp;&#8597;</span>
+              <span onClick={() => requestSort('online_sell')} className={[getClassNamesFor('online_sell'), styles.sortSpan].join(" ")}>
+                {t("currenciesPage.currencySelling")}&nbsp;&#8597;
+              </span>
             </div>
           </TableCell>
         </TableRow>
@@ -299,9 +320,10 @@ const ProductTable = (props) => {
       <TableBody>
         {items
           .filter(row => {
+            let requestedField = localeUA ? row.title_ua : row.title_en
             if (query === "") {
               return row
-            } else if (row.title_ua.toLowerCase().includes(query.toLowerCase())) {
+            } else if (requestedField.toLowerCase().includes(query.toLowerCase())) {
               return row
             }
           })
@@ -309,7 +331,7 @@ const ProductTable = (props) => {
             <TableRow key={item.id}>
               <TableCell style={{ textAlign: "left" }}>
                 <img src={item.icon} className={styles.bankIcon} />
-                <span className={styles.bankTitle}>{item.title_ua}</span>
+                <span className={styles.bankTitle}>{localeUA ? item.title_ua : item.title_en}</span>
               </TableCell>
               <TableCell style={{ textAlign: 'right' }}>
                 <span className={styles.bankRates}>{(item.paydesk_bye).toFixed(2)}</span>
@@ -327,14 +349,15 @@ const ProductTable = (props) => {
                 <span className={styles.bankRates}>{(item.online_sell).toFixed(2)}</span>
               </TableCell>
             </TableRow>
-          ))}
+          ))
+        }
       </TableBody>
     </Table>
   </TableContainer>
   )
 }
 
-const types = exchangeListUA
+const types = localStorage.getItem('locale') === "ua" ? exchangeListUA : exchangeListEn
 
 export const CurrencyFull = () => {
   const styles = useStyles()
@@ -372,12 +395,10 @@ export const CurrencyFull = () => {
       }, 500)
     }
     setContent()
-  }, [])
+  }, [dataRowsEuro])
 
-  console.log(active, tab)
 
   const handleClick = (newType, newIndex) => {
-    console.log("clicked")
     setActive(newType)
     setTab(newIndex)
   }
@@ -388,7 +409,7 @@ export const CurrencyFull = () => {
     <div className={styles.headSummary}>
       <div className={styles.row}>
         <span className={styles.unicodeRound}>&#11044;</span>
-        <span className={styles.label}>Курс валют на сьогодні</span> 
+        <span className={styles.label}>{t("currenciesPage.pageTitle")}</span> 
       </div>
     </div>
     <Tabs>
@@ -401,7 +422,7 @@ export const CurrencyFull = () => {
               style={{ 
                 // color: (active && index == activeIndex) ? '#5669FF' : 'black',
                 // fontWeight: (active && index == activeIndex) ? 600 : 'normal',
-                borderBottom: active == type ? '2px solid #5669FF': 'none',
+                // borderBottom: active == type ? '2px solid #5669FF': 'none',
               }} 
               className={styles.tabBtn}>{type}
             </button>

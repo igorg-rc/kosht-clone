@@ -8,16 +8,46 @@
   "leftMenu": {
     "followUs": "Follow us",
     "subscribeHeader": "Enter email",
+    "subscribePlaceholder": "Enter email",
     "subscribeLink": "Subscribe",
     "about": "About project"
   },
   "separateList": {
-    "accorionExpand": "expand",
-    "accorionCollapse": "collapse",
-    "accorionShowMore": "Show more",
-    "readMore": "Read more"
+    "accordionExpand": "expand",
+    "accordionCollapse": "collapse",
+    "accordionShowMore": "Show more",
+    "titleReadMore": "Read more",
+    "titleNewsWeek": "Main news",
+    "titleNews": "News",
+    "titleEditorChoice": "Editor choice",
+    "titleCurrenciesToday": "Exchange rate for today",
+    "currencyEuro": "Euro",
+    "currencyUSD": "USD",
+    "currencyBank": "Bank",
+    "currencyBuy": "Buy",
+    "currencySelling": "Selling",
+    "allCurrenciesLink": "All banks and currencies"
+  },
+  "currenciesPage": {
+    "pageTitle": "Exchange rate for today",
+    "searchInput": "Search by bank title",
+    "atPayDesk": "Paying in paydesk",
+    "atCard": "Paying by card",
+    "atOnline": "Paying online",
+    "currencyBuy": "Buy",
+    "currencySelling": "Selling"
   },
   "loading": {
     "loadingStatus": "Loading..."
+  },
+  "search": {
+    "searchQuery": "Searching by query:",
+    "searchMessage": "Search returned no results"
+  },
+  "postList": {
+    "noPosts": "No posts created yet!"
+  },
+  "postDetail": {
+
   }
 }
