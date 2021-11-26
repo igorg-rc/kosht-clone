@@ -7,7 +7,7 @@ import { create_subscriber, get_categories, get_contacts, get_tags, HOST_URL } f
 import { SectionTitle } from "./Title"
 import { Trans, useTranslation } from "react-i18next"
 import { SpinnerContent } from "./SpinnerContent"
-import { lang } from "moment"
+// import { lang } from "moment"
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -149,7 +149,8 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export const LeftMenu = () => {
+export const LeftMenu = props => {
+  const { turnOnLoading, turnOffLoading } = props
   const { i18n, t } = useTranslation()
   const theme = useTheme()
   // const isSM = useMediaQuery(theme.breakpoints.down('xs'))
@@ -181,11 +182,14 @@ export const LeftMenu = () => {
 
   const subscribeHandler = async e => {
     try {
-      await create_subscriber({ email: userInput })
-      alert("Вітаємо! Ви підписалися на розсилку наших статей!")
+      if (e.target.value !== "") {
+        await create_subscriber({ email: userInput })
+        alert(t("leftMenu.subscribeAlert"))
+      } else {
+        return;
+      }
       e.target.value=""
       setUserInput("")
-      window.location.reload()
     } catch (error) {
       console.log(error)
     } 
@@ -201,11 +205,12 @@ export const LeftMenu = () => {
     setCategoryHover(false)
   }
 
-  const handleLanguageChange = lang => {
-    window.location.reload()
-    i18n.changeLanguage(lang)
-    localStorage.setItem('locale', lang)
-  }
+  // const handleLanguageChange = lang => {
+  //   setLoading(true)
+  //   i18n.changeLanguage(lang)
+  //   localStorage.setItem('locale', lang)
+  //   setLoading(false)
+  // }
 
   return loading ? null : <>
     <section className={styles.main}>
@@ -217,7 +222,6 @@ export const LeftMenu = () => {
               key={item._id}
               onMouseEnter={e => setItemHover(e, index)}  
               onMouseLeave={e => setItemNotHover(e, index)}
-              // style={{ border: categoryIndex === index && categoryHover === true ? '2px solid black' : 'none' }}
             >
               <NavLink 
                 to={`/category/${(item.slug)}`} 
@@ -313,8 +317,8 @@ export const LeftMenu = () => {
         </div>
       </div>
     </section>
-    <section className={styles.main} style={{ margin: '30px 0', padding: '20px 20px' }}>
-      <SectionTitle title={t("leftMenu.about")} />
+    {/* <section className={styles.main} style={{ margin: '30px 0', padding: '20px 20px' }}>
+      <SectionTitle title={t("leftMenu.about")} /> */}
       {/* <div className={styles.langSwitcher} style={{ color: 'black' }}>
         <TextField  
           variant="outlined" 
@@ -337,10 +341,10 @@ export const LeftMenu = () => {
           }}
         />
       </div> */}
-      <div id="lang-switcher" style={{ textAlign: 'left', padding: '10px 0' }}>
+      {/* <div id="lang-switcher" style={{ textAlign: 'left', padding: '10px 0' }}>
         <button onClick={() => handleLanguageChange("ua")}>UA</button>
         <button onClick={() => handleLanguageChange("en")}>EN</button>
-      </div>
+      </div> */}
 
       {/* <select onChange={handleLanguageChange} value={language}>
         <option value="ua">UA</option>
@@ -348,6 +352,6 @@ export const LeftMenu = () => {
       </select> */}
 
       
-    </section>
+    {/* </section> */}
   </>
 }

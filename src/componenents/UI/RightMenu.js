@@ -127,7 +127,7 @@ const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
     opacity: 1,
     left: 0,
     marginLeft: -7,
-    marginRight: 3,
+    marginRight: 9,
     marginTop: -10,
     paddingBottom: -20,
     '&.Mui-selected': {

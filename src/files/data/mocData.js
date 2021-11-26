@@ -72,7 +72,7 @@ export const tagList = [
 ]
 
 export const exchangeListUA = ["Євро", "Долар", "Рубль", "Фунт", "Швейц. франк", "Злотий", "Крона"]
-export const exchangeListEn = ["Euro", "USD", "Rubl", "GB Pound", "Swiss Franc", "Pl Zloty", "Czech Crown"]
+export const exchangeListEN = ["Euro", "USD", "Rubl", "GB Pound", "Swiss Franc", "Pl Zloty", "Czech Crown"]
 
 export const createData = (name_ua, name_en, paydesk_bye, paydesk_sell, card_bye, card_sell, online_bye, online_sell, icon) => {
   return { name_ua, name_en, paydesk_bye, paydesk_sell, card_bye, card_sell, online_bye, online_sell, icon }

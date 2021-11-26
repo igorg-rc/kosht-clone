@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react"
 import { makeStyles } from "@material-ui/styles"
-import { Typography, Table, TableHead, TableBody, TableRow, TableCell, TextField, TableContainer, InputAdornment } from "@material-ui/core"
-import { exchangeListUA, dataRowsUSD, dataRowsEuro, dataRowsRub, dataRowsPound, dataRowsFrSw, dataRowsZlot, dataRowsCrona, exchangeListEn } from "../../files/data/mocData"
+import { Typography, Table, TableHead, TableBody, TableRow, TableCell, TextField, TableContainer, InputAdornment, Button } from "@material-ui/core"
+import { exchangeListUA, dataRowsUSD, dataRowsEuro, dataRowsRub, dataRowsPound, dataRowsFrSw, dataRowsZlot, dataRowsCrona, exchangeListEN } from "../../files/data/mocData"
 import { Tabs, Tab, Panel } from '@bumaga/tabs' 
 import searchIcon from '../../files/images/UI/search.png'
 import { SpinnerContent } from "../UI/SpinnerContent"
@@ -16,8 +16,8 @@ const useStyles = makeStyles(theme => ({
     background: '#fff',
     boxShadow: '0px 8px 25px rgba(83, 89, 144, 0.07)',
     borderRadius: 6,
-    marginBottom: 30,
-    fontSize: 13
+    marginBottom: 10,
+    fontSize: 16
   },
   tabsWrapper: {
     padding: '0px 20px',
@@ -25,19 +25,25 @@ const useStyles = makeStyles(theme => ({
     boxShadow: '0px 8px 25px rgba(83, 89, 144, 0.07)',
     borderRadius: 6,
     marginBottom: 20,
-    fontSize: 13
+    fontSize: 16
   },
   tabBtn: {
     border: 'none',
-    background: '#F8F8F8',
+    background: '#fff',
     fontSize: 14,
     fontFamily: 'Gilroy, sans-serif',
-    padding: 0,
-    marginRight: 5,
+    padding: '10px 0',
+    height: 40,
+    marginRight: 15,
+    // marginTop: 10,
     letterSpacing: '0.5px',
     color: '#2E3A59',
+    borderRadius: 0,
+    textTransform: 'none',
     '&:hover': {
-      cursor: 'pointer'
+      cursor: 'pointer',
+      color: '#5669FF',
+      background: '#fff'
     }
   },
   table: {
@@ -357,12 +363,17 @@ const ProductTable = (props) => {
   )
 }
 
-const types = localStorage.getItem('locale') === "ua" ? exchangeListUA : exchangeListEn
+
 
 export const CurrencyFull = () => {
+  const types = !localStorage.getItem('locale') ? exchangeListUA : (localStorage.getItem('locale') === "en" ? exchangeListEN : exchangeListUA )
+  
+  const { t } = useTranslation()
   const styles = useStyles()
+  const [sectionTitle, setSectionTitle] = useState("")
+  const [tabList, setTabList] = useState([])
   const [tab, setTab] = useState(0)
-  const [active, setActive] = useState(exchangeListUA[0])
+  const [active, setActive] = useState(types[0])
   const [rowsEuro, setRowsEuro] = useState([])
   const [rowsUSD, setRowsUSD] = useState([])
   const [rowsRub, setRowsRub] = useState([])
@@ -379,6 +390,7 @@ export const CurrencyFull = () => {
   const [searchedCrona, setSearchedCrona] = useState("")
   const [loading, setLoading] = useState(false)
 
+
   useEffect(() => {
     const setContent = async () => {
       setLoading(true)
@@ -391,11 +403,13 @@ export const CurrencyFull = () => {
         setRowsFrSw(dataRowsFrSw)
         setRowsZlot(dataRowsZlot)
         setRowsCrona(dataRowsCrona)
+        setTabList(types)
+        setSectionTitle(t("currenciesPage.pageTitle"))
         setLoading(false)
       }, 500)
     }
     setContent()
-  }, [dataRowsEuro])
+  }, [dataRowsEuro, t])
 
 
   const handleClick = (newType, newIndex) => {
@@ -403,40 +417,48 @@ export const CurrencyFull = () => {
     setTab(newIndex)
   }
 
+
   return !loading 
   ? <>
   <div className={styles.main}>
     <div className={styles.headSummary}>
       <div className={styles.row}>
         <span className={styles.unicodeRound}>&#11044;</span>
-        <span className={styles.label}>{t("currenciesPage.pageTitle")}</span> 
+        <span className={styles.label}>{sectionTitle}</span> 
       </div>
     </div>
     <Tabs>
-      <div style={{ textAlign: 'left' }}>
-        { types.map((type, index) => (
-          <Tab tab={tab} key={type} active={active == type} onClick={(type, index) => handleClick(type, index)}>
+      <div style={{ textAlign: 'left',  borderRadius: 6, display: 'flex', flexDirection: 'row' }}>
+        { tabList.map((type, index) => (
+          <div onClick={e => handleClick(type, index)}><Tab tab={tab} key={type} active={active == type} onClick={(type, index) => handleClick(type, index)}>
             <button 
+              type="button"
               // key={type}
-              onClick={() => console.log("clicked")}
+              onClick={e => alert("clicked")}
               style={{ 
-                // color: (active && index == activeIndex) ? '#5669FF' : 'black',
+                color: active == type ? '#5669FF' : '#2E3A59',
                 // fontWeight: (active && index == activeIndex) ? 600 : 'normal',
-                // borderBottom: active == type ? '2px solid #5669FF': 'none',
+                borderBottom: active == type ? '2px solid #5669FF': '2px solid #fff',
+                fontWeight: active == type ? 600 : 500,
               }} 
               className={styles.tabBtn}>{type}
             </button>
-          </Tab>)) }
+          </Tab>
+          </div>
+        ))}
       </div>
 
-      <Panel><ProductTable currencies={rowsEuro} query={searchedEuro} onInputChange={e => setSearchedEuro(e.target.value)} /></Panel>
-      <Panel><ProductTable currencies={rowsUSD} query={searchedUSD} onInputChange={e => setSearchedUSD(e.target.value)} /></Panel>
-      <Panel><ProductTable currencies={rowsRub} query={searchedRub} onInputChange={e => setSearchedRub(e.target.value)} /></Panel>
-      <Panel><ProductTable currencies={rowsPound} query={searchedPound} onInputChange={e => setSearchedPound(e.target.value)} /></Panel>
-      <Panel><ProductTable currencies={rowsFrSw} query={searchedFrSw} onInputChange={e => setSearchedFrSw(e.target.value)} /></Panel>
-      <Panel><ProductTable currencies={rowsZlot} query={searchedZlot} onInputChange={e => setSearchedZlot(e.target.value)} /></Panel>
-      <Panel><ProductTable currencies={rowsCrona} query={searchedCrona} onInputChange={e => setSearchedCrona(e.target.value)} /></Panel>
+      <div style={{ height: '3vh', background: "#F8F8F8", margin: '0 -30px', borderRadius: 10 }}></div>
 
+      <div style={{ borderRadius: 6 }}>
+        <Panel><ProductTable currencies={rowsEuro} query={searchedEuro} onInputChange={e => setSearchedEuro(e.target.value)} /></Panel>
+        <Panel><ProductTable currencies={rowsUSD} query={searchedUSD} onInputChange={e => setSearchedUSD(e.target.value)} /></Panel>
+        <Panel><ProductTable currencies={rowsRub} query={searchedRub} onInputChange={e => setSearchedRub(e.target.value)} /></Panel>
+        <Panel><ProductTable currencies={rowsPound} query={searchedPound} onInputChange={e => setSearchedPound(e.target.value)} /></Panel>
+        <Panel><ProductTable currencies={rowsFrSw} query={searchedFrSw} onInputChange={e => setSearchedFrSw(e.target.value)} /></Panel>
+        <Panel><ProductTable currencies={rowsZlot} query={searchedZlot} onInputChange={e => setSearchedZlot(e.target.value)} /></Panel>
+        <Panel><ProductTable currencies={rowsCrona} query={searchedCrona} onInputChange={e => setSearchedCrona(e.target.value)} /></Panel>
+      </div>
     </Tabs>
     </div>
           {/* <div>
